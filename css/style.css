@@ -1,0 +1,178 @@
+:root{
+  /* “Dunder Mifflin” vibe */
+  --dm-blue: #0b2d5b;
+  --dm-blue-2:#173f7a;
+
+  /* acentos tipo oficina (post-its/stapler) */
+  --mustard: #f2c94c;
+  --stapler-red:#e11d48;
+  --sage: #22c55e;
+  --paper: #f6f4ef;
+  --paper-2:#fffdf8;
+  --ink: #1f2a37;
+
+  --line: rgba(11, 45, 91, 0.12);
+  --shadow: 0 10px 25px rgba(17, 24, 39, 0.10);
+  --radius: 18px;
+}
+
+* { box-sizing: border-box; }
+
+body{
+  color: var(--ink);
+  background:
+    radial-gradient(circle at 15% 5%, rgba(11,45,91,0.10), transparent 40%),
+    radial-gradient(circle at 85% 0%, rgba(242,201,76,0.10), transparent 35%),
+    repeating-linear-gradient(
+      0deg,
+      var(--paper) 0px,
+      var(--paper) 28px,
+      rgba(11, 45, 91, 0.035) 29px
+    );
+}
+
+#componente{
+  max-width: 920px;
+  margin: 0 auto;
+}
+
+/* Header */
+#componente header{
+  padding: 18px 16px;
+  border-radius: var(--radius);
+  background: linear-gradient(180deg, var(--paper-2), var(--paper));
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow);
+  position: relative;
+  overflow: hidden;
+}
+
+#componente header::after{
+  content:"";
+  position:absolute;
+  left:0; right:0; bottom:0;
+  height:6px;
+  background: linear-gradient(90deg, var(--dm-blue), var(--mustard), var(--stapler-red), var(--sage));
+  opacity: 0.95;
+}
+
+#componente header h1{
+  margin: 0;
+  font-weight: 900;
+  letter-spacing: .6px;
+  color: var(--dm-blue);
+  text-transform: uppercase;
+}
+
+#componente header p{
+  margin-top: 6px;
+  color: rgba(31, 42, 55, 0.75);
+}
+
+hr{
+  border: none;
+  height: 1px;
+  background: var(--line);
+  margin: 18px 0;
+}
+
+/* Cards */
+.card{
+  background: rgba(255, 255, 255, 0.72) !important;
+  border: 1px solid var(--line) !important;
+  border-radius: var(--radius) !important;
+  box-shadow: var(--shadow);
+  position: relative;
+  overflow: hidden;
+}
+
+.card::before{
+  content:"";
+  position:absolute;
+  left:0;
+  top:16px;
+  width:8px;
+  height:52px;
+  background: linear-gradient(180deg, var(--dm-blue), var(--mustard));
+  border-radius: 0 12px 12px 0;
+  opacity: 0.95;
+}
+
+/* Inputs */
+.form-control, .form-select{
+  border-radius: 14px !important;
+  border: 1px solid rgba(11,45,91,0.18) !important;
+  background: rgba(255, 255, 255, 0.78) !important;
+}
+
+.form-control:focus, .form-select:focus{
+  border-color: rgba(11,45,91,0.50) !important;
+  box-shadow: 0 0 0 0.2rem rgba(11,45,91,0.14) !important;
+}
+
+/* Radios */
+.form-check-input:checked{
+  background-color: var(--dm-blue) !important;
+  border-color: var(--dm-blue) !important;
+}
+
+/* Buttons */
+.btn-primary{
+  background: var(--dm-blue) !important;
+  border-color: var(--dm-blue) !important;
+  border-radius: 14px !important;
+  font-weight: 800;
+  letter-spacing: .2px;
+}
+
+.btn-primary:hover{
+  background: var(--dm-blue-2) !important;
+  border-color: var(--dm-blue-2) !important;
+}
+
+.btn-outline-secondary{
+  border-radius: 14px !important;
+  border-color: rgba(242,201,76,0.85) !important;
+  color: rgba(124, 86, 0, 1) !important;
+  font-weight: 800;
+  background: rgba(242,201,76,0.20) !important;
+}
+
+.btn-outline-secondary:hover{
+  background: rgba(242,201,76,0.35) !important;
+}
+
+/* Alerts */
+.alert{
+  border-radius: var(--radius);
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow);
+}
+
+.alert-success{
+  border-left: 7px solid var(--sage);
+}
+
+.alert-warning{
+  border-left: 7px solid var(--mustard);
+}
+
+/* Lista resultados */
+.list-group-item{
+  border-color: var(--line) !important;
+  background: rgba(255, 255, 255, 0.72) !important;
+}
+
+.list-group-item strong{
+  color: var(--dm-blue);
+}
+
+/* Mini “toques” de color por secciones */
+h3, h4, h5{
+  color: var(--dm-blue);
+}
+
+small.text-danger{
+  font-weight: 700;
+  color: var(--stapler-red) !important;
+}

@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Actividad Sumativa</title>
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/aimep4/aimep4/css/style.css">
+</head>
+
+<body>
+  <section id="componente" class="container py-4">
+    <header class="mb-2">
+      <h1 class="text-center">{{ titulo }}</h1>
+      <p class="text-center text-muted mb-0">
+       Dunder Mifflin test
+      </p>
+    </header>
+
+    <hr>
+
+    <!-- DATOS INICIALES -->
+    <article class="card p-3 mb-3">
+      <h4 class="mb-3">Antes de empezar</h4>
+
+      <div class="mb-3">
+        <label class="form-label">Tu nombre:</label>
+        <input class="form-control" type="text" v-model="nombre" placeholder="Ej. Armando">
+      </div>
+
+      <h5 class="mb-2">¿Has visto The Office (US)?</h5>
+
+      <div class="form-check">
+        <input class="form-check-input" type="radio" v-model="vioSerie" :value="true" id="vioSi">
+        <label class="form-check-label" for="vioSi">Sí, obvio </label>
+      </div>
+
+      <div class="form-check">
+        <input class="form-check-input" type="radio" v-model="vioSerie" :value="false" id="vioNo">
+        <label class="form-check-label" for="vioNo">No, aún no</label>
+      </div>
+
+      <small class="text-danger d-block mt-2" v-show="mostrarError">
+        {{ errorMsg }}
+      </small>
+    </article>
+
+    <!-- IMPORTANTE: ESTE BLOQUE ES EL QUE CONTROLA QUIÉN SE MUESTRA -->
+    <div>
+      <!-- SI SÍ LA VIO: ENCUESTA -->
+      <article class="card p-3 mb-3" v-if="vioSerie === true">
+        <h3 class="mb-3">Test rápido (The Office)</h3>
+
+        <div class="row g-3">
+          <div class="col-md-6">
+            <label class="form-label">Personaje favorito:</label>
+            <select class="form-select" v-model="nuevaEncuesta.personajeFav">
+              <option value="" disabled>Selecciona...</option>
+              <option v-for="p in personajes" :key="p" :value="p">{{ p }}</option>
+            </select>
+          </div>
+
+          <div class="col-md-6">
+            <label class="form-label">Temporada favorita:</label>
+            <select class="form-select" v-model="nuevaEncuesta.temporadaFav">
+              <option value="" disabled>Selecciona...</option>
+              <option v-for="t in temporadas" :key="t" :value="t">Temporada {{ t }}</option>
+            </select>
+          </div>
+
+          <div class="col-12">
+            <label class="form-label">¿Cuántas veces al mes ves capítulos (aprox)?</label>
+            <input class="form-control" type="number" min="0" v-model="nuevaEncuesta.frecuencia">
+          </div>
+        </div>
+
+        <hr>
+
+        <!-- TRIVIA -->
+        <div class="mt-2">
+          <h5 class="mb-3">Trivia (5 preguntas)</h5>
+
+          <div class="mb-3" v-for="pregunta in preguntas" :key="pregunta.id">
+            <p class="mb-2"><strong>{{ pregunta.texto }}</strong></p>
+
+            <div class="form-check" v-for="(op, idx) in pregunta.opciones" :key="pregunta.id + '_' + idx">
+              <input class="form-check-input"
+                     type="radio"
+                     :name="pregunta.id"
+                     v-model="respuestas[pregunta.id]"
+                     :value="op"
+                     :id="pregunta.id + '_' + idx">
+              <label class="form-check-label" :for="pregunta.id + '_' + idx">
+                {{ op }}
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <hr>
+
+        <!-- VIBRA -->
+        <div class="mt-2">
+          <h5 class="mb-3">Tu vibra en la oficina</h5>
+
+          <div class="mb-3">
+            <label class="form-label">En una reunión tú eres más de...</label>
+            <select class="form-select" v-model="nuevaEncuesta.vibra1">
+              <option value="" disabled>Selecciona...</option>
+              <option v-for="v in vibraReunion" :key="v.valor" :value="v.valor">{{ v.texto }}</option>
+            </select>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Cuando hay caos en el trabajo tú...</label>
+            <select class="form-select" v-model="nuevaEncuesta.vibra2">
+              <option value="" disabled>Selecciona...</option>
+              <option v-for="v in vibraCaos" :key="v.valor" :value="v.valor">{{ v.texto }}</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- BOTONES -->
+        <div class="d-flex gap-2 mt-3">
+          <button class="btn btn-primary flex-fill" @click="guardarRespuesta()">
+            Ver mi resultado
+          </button>
+
+          <button class="btn btn-outline-secondary" type="button" @click="reiniciarTest()">
+            Reiniciar test
+          </button>
+        </div>
+      </article>
+
+      <!-- SI NO LA VIO -->
+      <article class="alert alert-warning" v-else-if="vioSerie === false">
+        <strong>{{ nombre || 'Hey' }}</strong>, sin problema 😅.
+        Te recomiendo empezar por la temporada 1 para agarrar el estilo del humor.
+      </article>
+    </div>
+
+    <!-- RESULTADO -->
+    <article class="alert alert-success" v-show="mostrarResultado">
+      <h4 class="mb-2">Resultado de {{ nombre }}:</h4>
+      <p class="mb-1">Puntos de trivia: <strong>{{ resultado.puntos }}</strong> / {{ preguntas.length }}</p>
+      <p class="mb-1">Nivel: <strong>{{ resultado.nivel }}</strong></p>
+      <p class="mb-0">Tu vibra es más como: <strong>{{ resultado.personaje }}</strong> 🎬</p>
+
+      <button class="btn btn-outline-secondary mt-3" type="button" @click="reiniciarTest()">
+        Reiniciar test
+      </button>
+    </article>
+
+    <!-- HISTORIAL -->
+    <div class="card p-3" v-show="respuestasRecibidas.length">
+      <h3 class="mb-3">Resultados guardados:</h3>
+
+      <ul class="list-group">
+        <li class="list-group-item" v-for="(item, index) in respuestasRecibidas" :key="index">
+          <strong>#{{ index + 1 }}</strong>
+          — {{ item.nombre }} | {{ item.personaje }} | {{ item.nivel }} | {{ item.puntos }}/{{ preguntas.length }}
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <script src="../js/vue.js"></script>
+  <script src="../js/main.js"></script>
+</body>
+</html>
